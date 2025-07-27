@@ -44,14 +44,16 @@ const DataDashboard: React.FC<DataDashboardProps> = ({
 
   const getFilteredData = () => {
     if (selectedDate) {
-      return data.filter(d => 
+      const filtered = data.filter(d => 
         format(d.date, 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
       );
+      return filtered;
     }
     if (selectedRange) {
-      return data.filter(d => 
+      const filtered = data.filter(d => 
         d.date >= selectedRange.start && d.date <= selectedRange.end
       );
+      return filtered;
     }
     return data.slice(-30); 
   };

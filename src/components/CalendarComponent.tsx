@@ -216,17 +216,23 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   };
 
   /**
-   * Handle date range submission
    * Validates and submits the selected date range
    */
   const handleRangeSubmit = () => {
-    if (!fromDate || !toDate) return;
+    if (!fromDate || !toDate) {
+      return;
+    }
     
     const startDate = new Date(fromDate);
     const endDate = new Date(toDate);
     
+    // Add time to ensure proper date comparison
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+    
     if (startDate <= endDate) {
-      onDateRangeSelect({ start: startDate, end: endDate });
+      const dateRange = { start: startDate, end: endDate };
+      onDateRangeSelect(dateRange);
     }
   };
 
@@ -334,15 +340,38 @@ const CalendarComponent: React.FC<CalendarProps> = ({
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm"
             />
           </div>
-          <div className="flex items-end">
+          <div className="flex items-end space-x-2">
             <button
               onClick={handleRangeSubmit}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm"
+              disabled={!fromDate || !toDate}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Apply Range
             </button>
+            <button
+              onClick={() => {
+                setFromDate('');
+                setToDate('');
+                if (onDateRangeSelect) {
+                  onDateRangeSelect({ 
+                    start: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000), 
+                    end: new Date() 
+                  });
+                }
+              }}
+              className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors text-sm"
+            >
+              Clear
+            </button>
           </div>
         </div>
+        {selectedRange && (
+          <div className="mt-3 p-2 bg-blue-50 dark:bg-blue-900 rounded-md">
+            <p className="text-xs text-blue-800 dark:text-blue-200">
+              Selected Range: {format(selectedRange.start, 'MMM dd, yyyy')} - {format(selectedRange.end, 'MMM dd, yyyy')}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Calendar Grid */}

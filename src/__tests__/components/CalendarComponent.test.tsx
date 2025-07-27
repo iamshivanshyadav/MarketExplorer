@@ -180,9 +180,15 @@ describe('CalendarComponent', () => {
     fireEvent.change(toDateInput, { target: { value: '2024-01-31' } });
     fireEvent.click(applyRangeButton);
     
+    // Create expected dates with the new time handling
+    const expectedStart = new Date('2024-01-01');
+    expectedStart.setHours(0, 0, 0, 0);
+    const expectedEnd = new Date('2024-01-31');
+    expectedEnd.setHours(23, 59, 59, 999);
+    
     expect(defaultProps.onDateRangeSelect).toHaveBeenCalledWith({
-      start: new Date('2024-01-01'),
-      end: new Date('2024-01-31')
+      start: expectedStart,
+      end: expectedEnd
     });
   });
 
