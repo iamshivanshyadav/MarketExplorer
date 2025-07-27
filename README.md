@@ -6,9 +6,11 @@ A comprehensive cryptocurrency market analysis tool that explores seasonal patte
 
 ### 📊 **Core Analytics**
 - **Calendar View**: Interactive calendar displaying daily market metrics with color-coded volatility indicators and matching borders
-- **Analytics Dashboard**: Comprehensive charts and statistics with multiple visualization types
+- **Analytics Dashboard**: Comprehensive charts and statistics with multiple visualization types (Line, Area, Bar, Pie)
 - **Custom Date Range Selection**: Flexible date filtering for both calendar and analytics views
 - **Real-time Data Integration**: WebSocket connectivity for live market updates
+- **Selective Metrics Display**: Toggle individual metrics (volatility, liquidity, performance) in calendar view
+- **Trend Indicators**: Colored background indicators with trend icons for performance visualization
 
 ### 🔍 **Advanced Pattern Detection**
 - **Seasonal Patterns**: Monthly volatility and performance pattern analysis
@@ -42,12 +44,14 @@ A comprehensive cryptocurrency market analysis tool that explores seasonal patte
 - **Dark/Light Mode**: Automatic theme switching based on system preferences
 - **Animation Effects**: Smooth transitions and micro-interactions
 - **Dynamic Borders**: Calendar cell borders that match volatility colors for enhanced visual consistency
+- **Performance Color Coding**: Black text for performance percentages with colored trend indicators
 
 ### 🔧 **Technical Features**
 - **Hydration Error Prevention**: Robust handling of browser extensions and date initialization
 - **Type Safety**: Full TypeScript implementation with strict type checking
 - **Performance Optimized**: Efficient data processing and rendering
 - **Error Handling**: Comprehensive error boundaries and user feedback
+- **Mock Data Fallback**: Automatic fallback to mock data when API is unavailable
 
 ## 🛠️ Technology Stack
 
@@ -100,20 +104,23 @@ npm start
 ### **Getting Started**
 1. **Select Symbol**: Choose from available cryptocurrency pairs (BTCUSDT, ETHUSDT, etc.)
 2. **Set Timeframe**: Select daily, weekly, or monthly analysis
-3. **Choose Metrics**: Toggle volatility, liquidity, and performance indicators
+3. **Choose Metrics**: Toggle volatility, liquidity, and performance indicators in the filter controls
 4. **Navigate Views**: Switch between Calendar, Analytics, Alerts, Comparison, and Patterns
 
 ### **Calendar View**
 - **Interactive Calendar**: Click dates to view detailed market data
-- **Color Coding**: Green for positive performance, red for negative
-- **Metric Indicators**: Visual indicators for selected metrics
+- **Color Coding**: Volatility-based color coding with matching borders
+- **Metric Indicators**: Visual indicators for selected metrics only
+- **Trend Indicators**: Colored background indicators with trend icons (green for positive, red for negative performance)
 - **Date Range Selection**: Custom date range filtering
+- **Selective Display**: Only selected metrics display in calendar cells
 
 ### **Analytics Dashboard**
-- **Multiple Chart Types**: Line, area, bar, and pie charts
+- **Multiple Chart Types**: Line, area, bar, and pie charts with interactive controls
 - **Statistical Overview**: Average, total, and distribution metrics
 - **Custom Date Ranges**: Filter data by specific time periods
 - **Export Options**: Download charts and data in multiple formats
+- **Chart Type Selection**: Switch between different chart types for each metric
 
 ### **Pattern Detection**
 - **Seasonal Analysis**: Monthly pattern detection with confidence scores
@@ -133,6 +140,12 @@ npm start
 2. **Configure Notifications**: Enable browser and sound alerts
 3. **Monitor Triggers**: Real-time alert monitoring and history
 4. **Customize Settings**: Adjust notification preferences and intervals
+
+### **Filter Controls**
+- **Symbol Selection**: Choose from available trading pairs
+- **Timeframe Toggle**: Switch between daily, weekly, monthly views
+- **Metrics Toggle**: Select which metrics to display (volatility, liquidity, performance)
+- **Real-time Updates**: Changes apply immediately to all views
 
 ## 🔧 Configuration
 
@@ -164,10 +177,12 @@ NEXT_PUBLIC_WS_URL=wss://stream.binance.com:9443
 
 ### **Data Processing**
 - **Volatility Calculation**: High-low range percentage with color-coded visualization
-- **Performance Metrics**: Price change percentage
+- **Performance Metrics**: Price change percentage with black text display
 - **Liquidity Analysis**: Volume-based liquidity indicators
 - **Technical Indicators**: SMA, RSI, and other technical metrics
 - **Visual Consistency**: Border colors that match cell background colors for unified heatmap effect
+- **Trend Visualization**: Colored background indicators with trend icons for performance direction
+- **Mock Data Generation**: Comprehensive fallback data when API is unavailable
 
 ## 🎨 Design System
 
@@ -221,7 +236,11 @@ NEXT_PUBLIC_WS_URL=wss://stream.binance.com:9443
 
 **Data Loading Issues**
 - **Cause**: API rate limits or network connectivity
-- **Solution**: Check network connection and API status
+- **Solution**: Application automatically falls back to mock data when API is unavailable
+
+**Metrics Not Displaying**
+- **Cause**: Metrics not selected in filter controls
+- **Solution**: Ensure desired metrics are checked in the filter controls
 
 **Export Failures**
 - **Cause**: Large datasets or browser memory limits
@@ -230,6 +249,10 @@ NEXT_PUBLIC_WS_URL=wss://stream.binance.com:9443
 **Pattern Detection**
 - **Cause**: Insufficient data for pattern analysis
 - **Solution**: Ensure adequate historical data is available
+
+**Trend Indicators**
+- **Cause**: Performance metrics not selected
+- **Solution**: Enable performance metrics in filter controls to see trend indicators
 
 ### **Debug Mode**
 ```bash
@@ -253,6 +276,14 @@ npm test
 # Build for production
 npm run build
 ```
+
+### **Testing**
+- **Comprehensive Coverage**: 115+ tests covering all major components
+- **Component Testing**: React Testing Library for component behavior
+- **Service Testing**: API service and data processing tests
+- **Utility Testing**: Data generation and processing utilities
+- **Mock Data**: Extensive mock data scenarios for testing
+- **Error Handling**: Tests for error states and edge cases
 
 ### **Code Standards**
 - **TypeScript**: Strict type checking enabled

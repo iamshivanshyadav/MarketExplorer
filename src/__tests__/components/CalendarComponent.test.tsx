@@ -371,4 +371,86 @@ describe('CalendarComponent', () => {
     
     expect(screen.getByText('January 2024')).toBeInTheDocument();
   });
+
+  test('displays tooltip on hover', async () => {
+    const mockData = [
+      {
+        date: new Date(2024, 0, 1),
+        volatility: 1.2,
+        performance: 2.5,
+        volume: 1500000,
+        high: 50000,
+        low: 48000,
+        open: 49000,
+        close: 49500,
+        liquidity: 0.8,
+        dayOfWeek: 1,
+        weekOfYear: 1,
+        monthOfYear: 1
+      }
+    ];
+
+    render(
+      <CalendarComponent
+        data={mockData}
+        timeframe={{ label: 'Daily', value: 'daily', interval: '1d' }}
+        colorScheme={{
+          volatility: { low: '#10b981', medium: '#f59e0b', high: '#ef4444' },
+          performance: { positive: '#10b981', negative: '#ef4444', neutral: '#6b7280' },
+          liquidity: { high: '#3b82f6', medium: '#6366f1', low: '#8b5cf6' }
+        }}
+        onDateSelect={jest.fn()}
+        onDateRangeSelect={jest.fn()}
+        selectedDate={null}
+        selectedRange={null}
+        selectedMetrics={['volatility', 'performance']}
+      />
+    );
+
+    const dayCell = screen.getByText('1');
+    fireEvent.mouseEnter(dayCell);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Jan 01, 2024/)).toBeInTheDocument();
+    });
+  });
+
+  test('displays metrics correctly in calendar cells', () => {
+    const mockData = [
+      {
+        date: new Date(2024, 0, 1),
+        volatility: 1.2,
+        performance: 2.5,
+        volume: 1500000,
+        high: 50000,
+        low: 48000,
+        open: 49000,
+        close: 49500,
+        liquidity: 0.8,
+        dayOfWeek: 1,
+        weekOfYear: 1,
+        monthOfYear: 1
+      }
+    ];
+
+    render(
+      <CalendarComponent
+        data={mockData}
+        timeframe={{ label: 'Daily', value: 'daily', interval: '1d' }}
+        colorScheme={{
+          volatility: { low: '#10b981', medium: '#f59e0b', high: '#ef4444' },
+          performance: { positive: '#10b981', negative: '#ef4444', neutral: '#6b7280' },
+          liquidity: { high: '#3b82f6', medium: '#6366f1', low: '#8b5cf6' }
+        }}
+        onDateSelect={jest.fn()}
+        onDateRangeSelect={jest.fn()}
+        selectedDate={null}
+        selectedRange={null}
+        selectedMetrics={['volatility', 'performance', 'liquidity']}
+      />
+    );
+
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('January 2024')).toBeInTheDocument();
+  });
 }); 

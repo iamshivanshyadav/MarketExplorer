@@ -607,4 +607,96 @@ describe('AnalyticsDashboard', () => {
     
     expect(screen.getByText('BTCUSDT Analytics - Daily View')).toBeInTheDocument();
   });
+
+  test('displays metrics correctly in statistics cards', () => {
+    const mockData = [
+      {
+        date: new Date(2024, 0, 1),
+        volatility: 1.2,
+        performance: 2.5,
+        volume: 1500000,
+        high: 50000,
+        low: 48000,
+        open: 49000,
+        close: 49500,
+        liquidity: 0.8,
+        dayOfWeek: 1,
+        weekOfYear: 1,
+        monthOfYear: 1
+      },
+      {
+        date: new Date(2024, 0, 2),
+        volatility: 1.5,
+        performance: 3.0,
+        volume: 1800000,
+        high: 51000,
+        low: 49000,
+        open: 49500,
+        close: 50000,
+        liquidity: 0.9,
+        dayOfWeek: 2,
+        weekOfYear: 1,
+        monthOfYear: 1
+      }
+    ];
+
+    render(
+      <AnalyticsDashboard
+        data={mockData}
+        timeframe={{ label: 'Daily', value: 'daily', interval: '1d' }}
+        colorScheme={{
+          volatility: { low: '#10b981', medium: '#f59e0b', high: '#ef4444' },
+          performance: { positive: '#10b981', negative: '#ef4444', neutral: '#6b7280' },
+          liquidity: { high: '#3b82f6', medium: '#6366f1', low: '#8b5cf6' }
+        }}
+        symbol="BTCUSDT"
+        selectedMetrics={['volatility', 'performance', 'liquidity']}
+      />
+    );
+
+    expect(screen.getByText('Average Volatility')).toBeInTheDocument();
+    expect(screen.getByText('1.50%')).toBeInTheDocument();
+    expect(screen.getByText('Total Performance')).toBeInTheDocument();
+    expect(screen.getByText('3.00%')).toBeInTheDocument();
+    expect(screen.getByText('Total Volume')).toBeInTheDocument();
+    expect(screen.getByText('1.80M')).toBeInTheDocument();
+  });
+
+  test('chart type selection buttons work correctly', () => {
+    const mockData = [
+      {
+        date: new Date(2024, 0, 1),
+        volatility: 1.2,
+        performance: 2.5,
+        volume: 1500000,
+        high: 50000,
+        low: 48000,
+        open: 49000,
+        close: 49500,
+        liquidity: 0.8,
+        dayOfWeek: 1,
+        weekOfYear: 1,
+        monthOfYear: 1
+      }
+    ];
+
+    render(
+      <AnalyticsDashboard
+        data={mockData}
+        timeframe={{ label: 'Daily', value: 'daily', interval: '1d' }}
+        colorScheme={{
+          volatility: { low: '#10b981', medium: '#f59e0b', high: '#ef4444' },
+          performance: { positive: '#10b981', negative: '#ef4444', neutral: '#6b7280' },
+          liquidity: { high: '#3b82f6', medium: '#6366f1', low: '#8b5cf6' }
+        }}
+        symbol="BTCUSDT"
+        selectedMetrics={['volatility', 'performance', 'liquidity']}
+      />
+    );
+
+    const performanceButton = screen.getByText('Performance');
+    fireEvent.click(performanceButton);
+
+    expect(performanceButton.closest('button')).toHaveClass('bg-blue-600');
+  });
 }); 

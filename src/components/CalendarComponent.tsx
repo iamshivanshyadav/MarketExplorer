@@ -39,10 +39,11 @@ const CalendarComponent: React.FC<CalendarProps> = ({
   selectedMetrics,
   onDashboardClose,
 }) => {
-  // Calendar display state
-  const [displayedDate, setDisplayedDate] = useState<Date | null>(null);  // Current month being displayed
-  const [focusedDate, setFocusedDate] = useState<Date | null>(null);      // Date with keyboard focus
-  const [hoveredDate, setHoveredDate] = useState<Date | null>(null);      // Date being hovered over
+  const [displayedDate, setDisplayedDate] = useState<Date | null>(null);
+  const [focusedDate, setFocusedDate] = useState<Date | null>(null);
+  const [hoveredDate, setHoveredDate] = useState<Date | null>(null);
+  const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
+  const [showTooltip, setShowTooltip] = useState(false);
   
   // Date range input state
   const [fromDate, setFromDate] = useState<string>('');  // Start date for range selection
@@ -243,6 +244,17 @@ const CalendarComponent: React.FC<CalendarProps> = ({
     return `${dateStr}\n${volatilityStr}\n${performanceStr}\n${liquidityStr}`;
   };
 
+  const handleMouseEnter = (day: Date, event: React.MouseEvent) => {
+    setHoveredDate(day);
+    setTooltipPosition({ x: event.clientX, y: event.clientY });
+    setShowTooltip(true);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredDate(null);
+    setShowTooltip(false);
+  };
+
   return (
     <div 
       ref={containerRef}
@@ -347,11 +359,12 @@ const CalendarComponent: React.FC<CalendarProps> = ({
         
         {/* Calendar days */}
         {days.map((day) => {
-          const dayData = data.find(d => 
-            d.date.getDate() === day.getDate() && 
-            d.date.getMonth() === day.getMonth() && 
-            d.date.getFullYear() === day.getFullYear()
-          );
+          const dayData = data.find(d => {
+            const dataDate = new Date(d.date);
+            return dataDate.getDate() === day.getDate() && 
+                   dataDate.getMonth() === day.getMonth() && 
+                   dataDate.getFullYear() === day.getFullYear();
+          });
           
           const isSelected = selectedDate && 
             day.getDate() === selectedDate.getDate() && 
@@ -382,8 +395,8 @@ const CalendarComponent: React.FC<CalendarProps> = ({
             <div
               key={day.toISOString()}
               onClick={() => handleDateClick(day)}
-              onMouseEnter={() => setHoveredDate(day)}
-              onMouseLeave={() => setHoveredDate(null)}
+              onMouseEnter={(e) => handleMouseEnter(day, e)}
+              onMouseLeave={handleMouseLeave}
               className={`
                 relative p-2 text-center text-sm cursor-pointer transition-all duration-200 rounded-md
                 ${dayData ? 'font-medium' : 'text-gray-400 dark:text-gray-500'}
@@ -400,7 +413,6 @@ const CalendarComponent: React.FC<CalendarProps> = ({
                 border: dayData ? `2px solid ${getColorFromVolatility(dayData.volatility)}` : undefined,
                 '--volatility-color': dayData ? getColorFromVolatility(dayData.volatility) : 'transparent',
               } as React.CSSProperties & { '--volatility-color': string }}
-              title={dayData ? getTooltipContent(dayData) : format(day, 'MMM dd, yyyy')}
               role="gridcell"
               aria-selected={isSelected}
               tabIndex={isFocused ? 0 : -1}
@@ -417,11 +429,17 @@ const CalendarComponent: React.FC<CalendarProps> = ({
               {/* Trend indicator in top-right */}
               {dayData && selectedMetrics.includes('performance') && (
                 <div className="absolute top-1 right-1">
-                  {dayData.performance > 0 ? (
-                    <TrendingUp className="w-3 h-3 text-green-600" />
-                  ) : (
-                    <TrendingDown className="w-3 h-3 text-red-600" />
-                  )}
+                  <div className={`p-1 rounded ${
+                    dayData.performance > 0 
+                      ? 'bg-green-500' 
+                      : 'bg-red-500'
+                  }`}>
+                    {dayData.performance > 0 ? (
+                      <TrendingUp className="w-3 h-3 text-white" />
+                    ) : (
+                      <TrendingDown className="w-3 h-3 text-white" />
+                    )}
+                  </div>
                 </div>
               )}
               
@@ -429,34 +447,54 @@ const CalendarComponent: React.FC<CalendarProps> = ({
               {dayData && (
                 <div className="mt-4 space-y-0.5 text-xs">
                   {/* Volatility line */}
-                  <div className={`${getTextColorForVolatility(dayData.volatility)} font-medium`}>
-                    Vol: {dayData.volatility.toFixed(1)}%
-                  </div>
+                  {selectedMetrics.includes('volatility') && (
+                    <div className={`${getTextColorForVolatility(dayData.volatility)} font-medium`}>
+                      Vol: {dayData.volatility.toFixed(1)}%
+                    </div>
+                  )}
                   
                   {/* Volume line */}
-                  <div className={`${getTextColorForVolatility(dayData.volatility)}`}>
-                    {dayData.volume > 1000000 
-                      ? `${(dayData.volume / 1000000).toFixed(1)}M`
-                      : `${(dayData.volume / 1000).toFixed(0)}K`
-                    }
-                  </div>
+                  {selectedMetrics.includes('liquidity') && (
+                    <div className={`${getTextColorForVolatility(dayData.volatility)}`}>
+                      {dayData.volume > 1000000 
+                        ? `${(dayData.volume / 1000000).toFixed(1)}M`
+                        : `${(dayData.volume / 1000).toFixed(0)}K`
+                      }
+                    </div>
+                  )}
                   
                   {/* Performance line */}
-                  <div className={`font-medium ${
-                    dayData.performance > 0 
-                      ? 'text-green-600 dark:text-green-400' 
-                      : dayData.performance < 0 
-                        ? 'text-red-600 dark:text-red-400'
-                        : getTextColorForVolatility(dayData.volatility)
-                  }`}>
-                    {dayData.performance > 0 ? '+' : ''}{dayData.performance.toFixed(2)}%
-                  </div>
+                  {selectedMetrics.includes('performance') && (
+                    <div className="font-medium text-black dark:text-white">
+                      {dayData.performance > 0 ? '+' : ''}{dayData.performance.toFixed(2)}%
+                    </div>
+                  )}
                 </div>
               )}
             </div>
           );
         })}
       </div>
+
+      {showTooltip && hoveredDate && (
+        <div
+          className="fixed z-50 bg-gray-900 text-white text-xs rounded-lg p-2 shadow-lg pointer-events-none"
+          style={{
+            left: tooltipPosition.x + 10,
+            top: tooltipPosition.y - 10,
+            transform: 'translateY(-100%)'
+          }}
+        >
+          {(() => {
+            const dayData = data.find(d => 
+              d.date.getDate() === hoveredDate.getDate() && 
+              d.date.getMonth() === hoveredDate.getMonth() && 
+              d.date.getFullYear() === hoveredDate.getFullYear()
+            );
+            return dayData ? getTooltipContent(dayData) : format(hoveredDate, 'MMM dd, yyyy');
+          })()}
+        </div>
+      )}
 
       {/* Legend */}
       <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
