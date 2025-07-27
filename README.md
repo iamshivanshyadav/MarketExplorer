@@ -55,24 +55,96 @@ A comprehensive cryptocurrency market analysis tool that explores seasonal patte
 
 ## 🛠️ Technology Stack
 
-### **Frontend**
+### **Frontend Framework**
 - **Next.js 15.4.3**: React framework with App Router and SSR
-- **TypeScript**: Type-safe development with strict configuration
-- **Tailwind CSS**: Utility-first CSS framework for responsive design
-- **Framer Motion**: Smooth animations and transitions
-- **Recharts**: Comprehensive charting library for data visualization
+  - **App Router**: File-based routing system
+  - **Server-Side Rendering**: Improved SEO and performance
+  - **Static Generation**: Pre-built pages for faster loading
+  - **API Routes**: Built-in API endpoint support
+
+### **Core Libraries**
+- **React 18**: Modern React with concurrent features
+  - **Hooks**: useState, useEffect, useMemo, useCallback
+  - **Context API**: Global state management
+  - **Error Boundaries**: Graceful error handling
+- **TypeScript 5.0+**: Type-safe development
+  - **Strict Mode**: Comprehensive type checking
+  - **Interface Definitions**: Strong typing for all data structures
+  - **Generic Types**: Reusable type-safe components
+
+### **Styling & UI**
+- **Tailwind CSS 3.3+**: Utility-first CSS framework
+  - **Responsive Design**: Mobile-first approach
+  - **Custom Colors**: Financial data color schemes
+  - **Dark Mode**: Automatic theme switching
+  - **JIT Compilation**: On-demand CSS generation
+- **Framer Motion**: Animation library
+  - **Smooth Transitions**: Micro-interactions and page transitions
+  - **Gesture Support**: Touch and mouse interactions
+  - **Performance Optimized**: Hardware-accelerated animations
+
+### **Data Visualization**
+- **Recharts 2.8+**: Comprehensive charting library
+  - **Line Charts**: Price and performance trends
+  - **Bar Charts**: Volume and volatility analysis
+  - **Area Charts**: Cumulative metrics visualization
+  - **Scatter Plots**: Correlation analysis
+  - **Responsive Charts**: Auto-scaling for all screen sizes
+  - **Interactive Features**: Zoom, pan, and hover effects
 
 ### **Data & APIs**
-- **Binance API**: Real-time cryptocurrency market data
-- **WebSocket Integration**: Live data streaming for real-time updates
-- **date-fns**: Modern date manipulation and formatting
-- **html2canvas**: Dashboard capture for PDF/image export
-- **jsPDF**: PDF generation with custom layouts
+- **Binance REST API v3**: Real-time cryptocurrency market data
+  - **Kline/Candlestick Data**: OHLCV market information
+  - **Rate Limiting**: Respectful API usage (1200 requests/minute)
+  - **Error Handling**: Graceful fallback to mock data
+  - **Data Processing**: Real-time calculation of metrics
+- **WebSocket Integration**: Live data streaming
+  - **Real-time Updates**: Live price and volume updates
+  - **Automatic Reconnection**: Robust connection management
+  - **Event-driven Architecture**: Efficient data flow
+
+### **Date & Time Handling**
+- **date-fns 2.30+**: Modern date manipulation library
+  - **Formatting**: Consistent date display across components
+  - **Calculations**: Date range and interval computations
+  - **Localization**: Multi-language date support
+  - **Performance**: Tree-shakable bundle optimization
+
+### **Export & File Handling**
+- **html2canvas 1.4+**: Dashboard capture for exports
+  - **High-resolution Screenshots**: 2x scale for crisp images
+  - **PNG Format**: Lossless image quality
+  - **Canvas Rendering**: Accurate visual representation
+- **jsPDF 2.5+**: PDF generation library
+  - **Landscape Orientation**: Optimized for dashboard layouts
+  - **Multi-page Support**: Large datasets across multiple pages
+  - **Custom Styling**: Professional PDF formatting
+  - **Font Embedding**: Consistent typography
 
 ### **Development Tools**
-- **ESLint**: Code quality and consistency
+- **ESLint 8.0+**: Code quality and consistency
+  - **TypeScript Rules**: Type-aware linting
+  - **React Rules**: Component and hook best practices
+  - **Import Sorting**: Consistent import organization
+- **Jest 29.0+**: Testing framework
+  - **React Testing Library**: Component testing utilities
+  - **Mock Service Worker**: API mocking for tests
+  - **Coverage Reports**: Comprehensive test coverage
 - **Turbopack**: Fast development builds
+  - **Incremental Compilation**: Faster hot reloads
+  - **Bundle Analysis**: Detailed size optimization
 - **PostCSS**: CSS processing and optimization
+  - **Autoprefixer**: Cross-browser compatibility
+  - **CSS Minification**: Production optimization
+
+### **Testing Libraries**
+- **React Testing Library**: Component testing utilities
+  - **User-centric Testing**: Tests that mimic user behavior
+  - **Accessibility Testing**: Screen reader and keyboard navigation
+  - **Custom Renderers**: Tailored testing environments
+- **Jest DOM**: DOM testing utilities
+  - **Custom Matchers**: Enhanced assertion capabilities
+  - **Mock Implementations**: Controlled test environments
 
 ## 📦 Installation
 
@@ -225,6 +297,79 @@ NEXT_PUBLIC_WS_URL=wss://stream.binance.com:9443
 - **Mobile Browsers**: iOS Safari and Android Chrome support
 - **Extension Compatibility**: Handles browser extensions gracefully
 - **Hydration Safety**: Robust hydration error prevention
+
+## 📋 Assumptions & Design Decisions
+
+### **Technical Assumptions**
+- **Modern Browser Support**: Assumes users have modern browsers with ES6+ support
+- **JavaScript Enabled**: Requires JavaScript to be enabled for full functionality
+- **Network Connectivity**: Assumes stable internet connection for real-time data
+- **API Availability**: Binance API is assumed to be available (with fallback to mock data)
+- **WebSocket Support**: Assumes browser support for WebSocket connections
+- **Local Storage**: Uses browser localStorage for user preferences (optional)
+
+### **Data Assumptions**
+- **Market Data Accuracy**: Assumes Binance API provides accurate market data
+- **Time Zone Handling**: All dates are processed in UTC for consistency
+- **Data Freshness**: Real-time data may have slight delays (1-3 seconds)
+- **Historical Data**: Limited to available historical data from Binance API
+- **Symbol Availability**: Assumes selected trading pairs are available on Binance
+
+### **User Experience Assumptions**
+- **Financial Literacy**: Users have basic understanding of market metrics
+- **Desktop Usage**: Primary interface designed for desktop/laptop use
+- **Mobile Responsive**: Secondary support for mobile devices
+- **Accessibility**: Assumes users may have varying accessibility needs
+- **Performance Expectations**: Users expect sub-second response times
+
+### **Business Logic Assumptions**
+- **Volatility Calculation**: Uses high-low range percentage as volatility measure
+- **Performance Metrics**: Calculates daily price change percentage
+- **Pattern Detection**: Assumes market patterns can be identified through statistical analysis
+- **Alert Thresholds**: Users can set meaningful thresholds for market conditions
+- **Export Requirements**: Users need data in standard formats (CSV, JSON, PDF, PNG)
+
+### **Development Assumptions**
+- **TypeScript Adoption**: Team is comfortable with TypeScript development
+- **React Knowledge**: Developers understand React hooks and patterns
+- **Testing Culture**: Comprehensive testing is expected and maintained
+- **Code Quality**: ESLint and Prettier are used for code consistency
+- **Version Control**: Git is used for version control and collaboration
+
+### **Performance Assumptions**
+- **Bundle Size**: Assumes users can download initial bundle (target: < 500KB)
+- **Memory Usage**: Assumes reasonable memory availability for data processing
+- **CPU Resources**: Assumes sufficient CPU for real-time calculations
+- **Network Speed**: Assumes broadband connection for optimal experience
+- **Caching**: Browser caching is utilized for static assets
+
+### **Security Assumptions**
+- **HTTPS Required**: Assumes HTTPS deployment in production
+- **No Sensitive Data**: No user credentials or personal data collected
+- **API Security**: Binance API handles authentication and authorization
+- **XSS Prevention**: React's built-in XSS protection is sufficient
+- **CSRF Protection**: No server-side state reduces CSRF risk
+
+### **Deployment Assumptions**
+- **Node.js Environment**: Assumes Node.js 18+ runtime environment
+- **Build Process**: Assumes npm/yarn for dependency management
+- **Static Hosting**: Can be deployed to static hosting platforms
+- **Environment Variables**: Configuration through environment variables
+- **CDN Support**: Static assets can be served via CDN
+
+### **Maintenance Assumptions**
+- **Regular Updates**: Dependencies will be updated regularly
+- **API Changes**: Binance API may change, requiring updates
+- **Browser Updates**: New browser versions may require compatibility updates
+- **Performance Monitoring**: Application performance will be monitored
+- **User Feedback**: User feedback will guide feature development
+
+### **Limitations & Constraints**
+- **API Rate Limits**: Binance API has rate limiting (1200 requests/minute)
+- **Data Retention**: No historical data storage beyond browser session
+- **Real-time Accuracy**: WebSocket data may have network delays
+- **Mobile Limitations**: Some features may be limited on mobile devices
+- **Browser Compatibility**: Some features may not work in older browsers
 
 ## 🐛 Troubleshooting
 
